@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Mac Packwala and the Curse of the Stale Cache</title>
+  <meta name="description" content="A point-and-click adventure about escaping the Curse of the Stale Cache with Drupal AI. Made for workflows-of-ai.com.">
+  <meta name="theme-color" content="#0a0c10">
+  <style>
+    :root {
+      --ink: #0a0c10;
+      --blue: #4242fa;
+      --pink: #e60067;
+      --slate: #5a6072;
+      --mist: #d6d8e1;
+      --paper: #f1f3f9;
+    }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body {
+      background-color: var(--paper);
+      background-image: radial-gradient(var(--mist) 1px, transparent 1px);
+      background-size: 12px 12px;
+      display: flex; align-items: center; justify-content: center;
+      touch-action: none;
+      -webkit-user-select: none; user-select: none;
+    }
+    canvas#screen {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      cursor: none;
+      display: block;
+      background: var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+      outline: 2px solid var(--ink);
+    }
+    #noscript { color: var(--ink); font-family: monospace; padding: 16px; }
+    html:fullscreen body { background: var(--ink); }
+    html:fullscreen canvas#screen { box-shadow: none; outline: none; }
+
+    /* Phones held upright: ask for landscape */
+    #rotate {
+      display: none;
+      position: fixed; inset: 0; z-index: 10;
+      align-items: center; justify-content: center;
+      padding: 16px;
+      background-color: var(--paper);
+      background-image: radial-gradient(var(--mist) 1px, transparent 1px);
+      background-size: 12px 12px;
+      font-family: ui-monospace, Menlo, Consolas, monospace;
+      color: var(--ink);
+    }
+    @media (orientation: portrait) and (pointer: coarse) {
+      #rotate { display: flex; }
+    }
+    body.rotate-dismissed #rotate { display: none; }
+    #rotate .card {
+      max-width: 320px; width: 100%;
+      background: #fff;
+      border: 2px solid var(--ink);
+      box-shadow: 6px 6px 0 var(--ink);
+      padding: 20px 18px;
+      text-align: center;
+    }
+    #rotate .prompt { margin: 0 0 16px; color: var(--pink); font-size: 13px; text-align: left; }
+    #rotate h1 { margin: 16px 0 8px; font-size: 20px; letter-spacing: 0.5px; }
+    #rotate p { margin: 0 0 16px; font-size: 14px; line-height: 1.45; color: var(--slate); }
+    #rotate .phone {
+      width: 40px; height: 64px; margin: 8px auto 0;
+      border: 4px solid var(--ink); border-radius: 6px;
+      background: var(--blue);
+      box-shadow: inset 0 0 0 3px #fff;
+      animation: turn 2.4s steps(1, end) infinite;
+    }
+    @keyframes turn {
+      0%, 45% { transform: rotate(0deg); }
+      50%, 95% { transform: rotate(-90deg); }
+    }
+    #rotate button {
+      display: block; width: 100%;
+      margin-top: 10px; padding: 11px 12px;
+      font: inherit; font-size: 14px; font-weight: bold;
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      background: #fff; color: var(--ink);
+      cursor: pointer;
+    }
+    #rotate button.primary { background: var(--blue); color: #fff; }
+    #rotate button:active { transform: translate(3px, 3px); box-shadow: none; }
+  </style>
+</head>
+<body>
+  <canvas id="screen" width="320" height="200" aria-label="Mac Packwala and the Curse of the Stale Cache: point-and-click game screen"></canvas>
+  <div id="rotate" role="dialog" aria-labelledby="rotate-title">
+    <div class="card">
+      <p class="prompt">marcus@workflows:~$ ./rotate.sh</p>
+      <div class="phone" aria-hidden="true"></div>
+      <h1 id="rotate-title">Turn your phone sideways</h1>
+      <p>The island is wider than it is tall. In landscape mode everything is big enough to tap.</p>
+      <button id="rotate-fs" class="primary" hidden>Full screen and landscape</button>
+      <button id="rotate-skip">Play anyway</button>
+    </div>
+  </div>
+  <noscript><div id="noscript">This game needs JavaScript. Even Mac Packwala's island has JavaScript.</div></noscript>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

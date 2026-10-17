@@ -1,0 +1,23 @@
+{
+  "name": "mac-packwala",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "trailer": "tsx tools/trailer/render.ts",
+    "audio": "tsx tools/audio/generate.ts",
+    "audio:lines": "tsx tools/audio/lines.ts",
+    "audio:record": "rm -f tools/audio/spoken.jsonl && vitest run --config tools/audio/vitest.record.config.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}
