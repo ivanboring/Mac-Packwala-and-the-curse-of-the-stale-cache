@@ -219,7 +219,7 @@ describe('Act 2: the Three Trials', () => {
     expect(core.log.some((l) => l.includes('many shelves, spiritually'))).toBe(true);
     expect(core.has('translate')).toBe(false);
 
-    // Professor Promptington: LLMs write, decision models choose
+    // Professor Abrahams: LLMs write, decision models choose
     await go(h, 'lib_door');
     await go(h, 'loc_temple');
     await act(h, 'talk', 'promptington', undefined, ['decide', 'bye']);

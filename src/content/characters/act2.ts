@@ -96,8 +96,8 @@ export const ollama: CharacterDef = {
   },
 };
 
-// ---- Professor Promptington (AI Explorer) ---------------------------------------------
-export const promptington = human('promptington', 'Professor Promptington', 'tan', {
+// ---- Professor Abrahams (AI Explorer) ---------------------------------------------
+export const promptington = human('promptington', 'Professor Abrahams', 'tan', {
   skin: C.skin, skinShade: C.skinshade, hair: C.white, hairStyle: 'side',
   headW: 7, headH: 8, nose: 'long', noseLen: 8, noseColor: C.pink, eyes: 'monocle', brows: C.white,
   moustache: C.white,

@@ -268,7 +268,7 @@ async function llmValidate(g: Game) {
   g.shake();
   await g.sayAs('formsworth', ['It wrote an ESSAY! The validator choked on it.', 'I asked a yes-or-no question and got a TED talk.']);
   await g.say(g.has('decision')
-    ? ['An LLM writes. That is its whole personality.', 'For a validator I need a model that CHOOSES. Like the Decision Model Promptington gave me.']
+    ? ['An LLM writes. That is its whole personality.', 'For a validator I need a model that CHOOSES. Like the Decision Model Abrahams gave me.']
     : ['An LLM writes. That is its whole personality.', 'For a validator I need a model that just... chooses. Somebody on this island must have one.']);
 }
 

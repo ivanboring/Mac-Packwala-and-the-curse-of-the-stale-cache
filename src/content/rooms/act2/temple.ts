@@ -231,7 +231,7 @@ async function installMetering(g: Game) {
   ]);
 }
 
-/** Promptington explains LLMs vs decision models, and hands over the Decision Model. */
+/** Abrahams explains LLMs vs decision models, and hands over the Decision Model. */
 async function giveDecision(g: Game) {
   await g.sayAs('promptington', [
     'An essay on every shelf? Ha! You asked a poet to sort the post!',
@@ -390,7 +390,7 @@ export const templeDialogues: Dialogue[] = [
       if (!g.flag('promptingtonMet')) {
         g.set('promptingtonMet');
         await g.sayAs('promptington', [
-          'Ah! A visitor! Professor Promptington, Explorer of Prompts, at your service!',
+          'Ah! A visitor! Professor Abrahams, Explorer of Prompts, at your service!',
           "I've been trying to get these idols to answer me for weeks. Not a peep. Not even a hallucination.",
         ]);
       } else await g.sayAs('promptington', 'Ah, my young friend! Back for more exploration?');
@@ -556,7 +556,7 @@ export const temple: RoomDef = {
       push: (g) => g.sayAs('ollama', '...whoa... buffering...'),
     },
     {
-      id: 'promptington', name: 'Professor Promptington', actor: 'promptington',
+      id: 'promptington', name: 'Professor Abrahams', actor: 'promptington',
       look: 'An explorer in a pith helmet and monocle, scribbling prompts into a notebook and frowning at the idols.',
       talk: (g) => g.talk('promptington'),
       giveItem: {

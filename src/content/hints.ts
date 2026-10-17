@@ -17,7 +17,7 @@ const HINTS: Hint[] = [
   { done: f('aiInstalled'), lines: ['To install the AI module, the Composer needs sheet music - composer.json - and a cat-free piano.', 'Cats like fish. Even red ones. Even ones that are supposedly useless.'] },
   { done: (g) => g.atLeast('editor'), lines: ['The AI module is installed! I should tell the Grand Maintainer.'] },
   { done: f('providerReady'), lines: ['Trial one: configure a provider. The idols in the temple want an API key, and tokens go in the slot.', 'But a key must be stored safely. The Key Keeper only trusts people who never commit secrets... like someone with a .gitignore.'] },
-  { done: f('automatorDone'), lines: ['Trial two: the mill. The Automator needs a provider and a good prompt.', "A prompt that's been tested first - Professor Promptington's AI Explorer is for exactly that. He'd trade it for something nobody reads."] },
+  { done: f('automatorDone'), lines: ['Trial two: the mill. The Automator needs a provider and a good prompt.', "A prompt that's been tested first - Professor Abrahams's AI Explorer is for exactly that. He'd trade it for something nobody reads."] },
   { done: (g) => !g.flag('providerSuspended'), lines: ['The idols cut off my provider over the token bill. I need to count my tokens - and a cheaper plan B.', "The Key Keeper counts everything. And Ollama the llama keeps saying he's local and free..."] },
   { done: f('masterBeaten'), lines: ['Trial three: beat the Code Review Master. Her patches hide the same bugs the reviewers at the crossroads show me.', "Every bug I miss, they explain. Every bug they explain, I'll spot next time. The Master lives behind the Waterfall. Nobody uses the Waterfall anymore."] },
   { done: (g) => g.atLeast('sitebuilder'), lines: ['All three trials are done. Back to the Grand Maintainer!'] },
@@ -25,7 +25,7 @@ const HINTS: Hint[] = [
   { done: f('slackConnected'), lines: ['The Slack server out on the reef is a parrot that only answers when @mentioned.', 'And parrots want crackers. OAuth ones, ideally.'] },
   { step: 'contextReady', done: f('contextReady'), lines: ['My agent wrote pure mush to "Captain Noodle". It knows nothing about me, or this island.', 'Agents need context. Modelia keeps Kristen\'s Context Control Center down in the lighthouse.'] },
   { done: (g) => !!g.flag('searchReady') || !!g.flag('geoClue'), lines: ['The GeoCities ghost knows where we are, but I need a translator. The Librarian has one, but her search only finds exact words.', 'He needs an index sorted by similarity. Like the scales on a pinecone, from the jungle crossroads. And a provider.'] },
-  { done: (g) => !!g.flag('flowBuilt') || !!g.flag('geoClue'), lines: ["The Librarian's FlowDrop board: trigger, shelf, summary, review, index.", 'But the LLM writes an essay every time it picks a shelf. I need a model that just CHOOSES. Professor Promptington might know one.'] },
+  { done: (g) => !!g.flag('flowBuilt') || !!g.flag('geoClue'), lines: ["The Librarian's FlowDrop board: trigger, shelf, summary, review, index.", 'But the LLM writes an essay every time it picks a shelf. I need a model that just CHOOSES. Professor Abrahams might know one.'] },
   { done: f('geoClue'), lines: ['AI Translate could make sense of the GeoCities ghost in the graveyard.'] },
   { step: 'mcpServing', done: f('mcpServing'), lines: ['Captain Node wants the coordinates via a tool call. I need an MCP server, and a geolocation tool on it.', 'The ghost said Old Cron logs everything, and he watches the stars on schedule. A blank Tool API card could become a tool.'] },
   { step: 'spamFixed', done: (g) => !!g.flag('spamFixed') || !!g.flag('permGranted'), lines: ['Formsworth is buried in spam. His AI Validations need a model that answers TRUE or FALSE.', 'Not an essay. I know just the model.'] },
@@ -72,7 +72,7 @@ const HELP: Record<string, Help[]> = {
   ],
   spamFixed: [
     { when: (g) => !g.flag('accessDenied'), who: 'nell', from: 'Nitpick Nell', lines: ['Your MCP server is up? Tell Captain Node in #captainnode, and let her try calling your tool!'] },
-    { who: 'promptington', from: 'Professor Promptington', lines: [
+    { who: 'promptington', from: 'Professor Abrahams', lines: [
       "Formsworth's AI Validations need a model that answers TRUE or FALSE. An LLM gives you a lecture on the philosophy of spam.",
       'Use the Decision Model I gave you on his spam pile. It picks one answer from a fixed list, and tells you how sure it is.',
     ] },

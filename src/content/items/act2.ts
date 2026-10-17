@@ -184,7 +184,7 @@ export const act2Items: ItemDef[] = [
     id: 'decision',
     name: 'Decision Model',
     look: [
-      'A Decision Model, from Professor Promptington. A shiny black orb, like a magic 8-ball.',
+      'A Decision Model, from Professor Abrahams. A shiny black orb, like a magic 8-ball.',
       'Give it a question and a fixed list of answers. It picks ONE, and says how sure it is: "Nautical. 94%."',
       'Unlike the classic 8-ball, it tells you how sure it is. Great for sorting, routing, moderating and scoring. Useless for poetry.',
     ],

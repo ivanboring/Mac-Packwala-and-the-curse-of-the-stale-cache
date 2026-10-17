@@ -26,7 +26,7 @@ installs drupal/ai) → sitebuilder (after the three trials). Gate with
 | bandstand | The Bandstand | 1 | Composer, Dependency Cat on piano |
 | map | Island Map | 2 | noMac; location hotspots |
 | keyhut | The Key Keeper's Hut | 2 | Key Keeper, vault |
-| temple | Temple of Providers | 2 | cloud idols, Ollama the llama, Promptington, rate-limit slot, stained-glass context window |
+| temple | Temple of Providers | 2 | cloud idols, Ollama the llama, Abrahams, rate-limit slot, stained-glass context window |
 | mill | Automator Mill | 2 | Fieldsworth, the Automator machine, field of empty product boxes |
 | library | Library of Unindexed Knowledge | 2 | Librarian |
 | graveyard | Graveyard of Dead Web Tech | 2 | ghosts: flash, blink, geocities (hit counter tombstone), speakotron |
@@ -62,7 +62,7 @@ disclosure (AI Disclosure stamp), postcard
 1. Intro: Mac under a sail. PULL sail (any other verb: muffled hint).
 2. Bottle in the surf → open → README.txt ("Nobody reads this").
 3. Rubber duck in the sand → hint system (Talk to duck).
-   Once Slack is connected, the lamp can also switch to **#ai-contrib**, where the people who build Drupal AI (Nell, Modelia, Promptington, Cron, the Maintainer, Formsworth) give a direct tip for the current step: stronger than the duck (`aiContribHelp` in `hints.ts`).
+   Once Slack is connected, the lamp can also switch to **#ai-contrib**, where the people who build Drupal AI (Nell, Modelia, Abrahams, Cron, the Maintainer, Formsworth) give a direct tip for the current step: stronger than the duck (`aiContribHelp` in `hints.ts`).
 4. Plank + nailed crate → f5key, weight. Seaweed → atshell.
 5. Old Cron asleep (poor man's cron: only runs when someone visits) → use f5key → legend of the Fog, Captain Node, sends Mac to town.
 6. Cookie Consent guard blocks the town path. "Accept all" → he freezes "loading 847 partners" → use f5key on him; or "Manage preferences" → page through silly toggles → hidden "Reject all" on last page. Either way: flag `cookiesDone`.
@@ -80,10 +80,10 @@ disclosure (AI Disclosure stamp), postcard
 
 ### Act 2 — Editor: the Three Trials
 Trial PROVIDE
-18. Temple: Promptington can't get answers. Cloud idols need a key; Ollama the llama is local, needs no key, but is very slow (gag). Insert tokens in rate-limit slot → apikey.
+18. Temple: Abrahams can't get answers. Cloud idols need a key; Ollama the llama is local, needs no key, but is very slow (gag). Insert tokens in rate-limit slot → apikey.
 19. Key Keeper refuses secrets unless you won't commit them: show gitignore → vault. Use apikey on vault → keyentity.
 20. Use keyentity on cloud idol → provider (`providerReady`, trial 1 ✔).
-21. Give readme to Promptington (nobody reads READMEs, LLMs do) → explorer (AI Explorer).
+21. Give readme to Abrahams (nobody reads READMEs, LLMs do) → explorer (AI Explorer).
 Trial AUTOMATE
 22. Mill: Fieldsworth has 10,000 products with empty descriptions. Automator machine needs provider (hopper) + a prompt.
 23. Use explorer → test a prompt; first run spews "Delve into this rich tapestry of synergy"; use explorer again (dialogue: pick the good prompt) → prompt card; use prompt on machine, pull lever (save) → descriptions written → tool_create, trial 2 ✔.
@@ -95,7 +95,7 @@ Trial AGENTS
 27. Maintainer → **sitebuilder**; gives blankcard (Tool API starter card) and reveals the Fog twist: only the Lighthouse reaches past it.
 Ecosystem side quests (any order, editor)
 28. Pine tree at crossroads → pinecone. Librarian: give pinecone (vector DB) + use provider (embeddings) → AI Search (Search API index, RAG for agents) → tool_search.
-28b. **FlowDrop + LLM vs Decision Models**: Librarian wants new books sorted, with himself as human in the loop. Use `flowboard` → 5-slot node builder (trigger, shelf, summary, review, index; joke nodes social/seagull). LLM on the shelf node writes essays → `needDecision`. Promptington option `decide` → decision (Decision Model). Rebuild with decision → `flowBuilt`; he gives translate (AI Translate) → tool_translate.
+28b. **FlowDrop + LLM vs Decision Models**: Librarian wants new books sorted, with himself as human in the loop. Use `flowboard` → 5-slot node builder (trigger, shelf, summary, review, index; joke nodes social/seagull). LLM on the shelf node writes essays → `needDecision`. Abrahams option `decide` → decision (Decision Model). Rebuild with decision → `flowBuilt`; he gives translate (AI Translate) → tool_translate.
 29. Graveyard: use translate on GeoCities ghost → hit counter tombstone holds the coordinates, but the counter was faked; "Cron logs everything".
 30. Speak-o-Tron needs batteries: Wordy trades batteries for the popup. → tool_tts (text-to-speech as a tool agents and rules can call; gag: its own new voice pack is still in code review).
 31. Wordy gives ckeditor (AI CKEditor) free to Editors. Give to sign painter → fixes "Welcom to Legasy Town" → ladder.
