@@ -1,6 +1,6 @@
 # Mac Packwala and the Curse of the Stale Cache
 
-A LucasArts-style point-and-click adventure for [workflows-of-ai.com](https://workflows-of-ai.com/).
+A classic point-and-click adventure for [workflows-of-ai.com](https://workflows-of-ai.com/).
 Mac Packwala, a Drupal site builder, is stranded on an island of stale CMSs and has to learn
 the Drupal AI ecosystem to escape: providers, automators, agents, Tool API tools, an MCP client,
 a Slack MCP server, and finally an MCP server with a geolocation tool so Captain Node can rescue him.
@@ -47,9 +47,3 @@ Saves use `localStorage` (autosave plus 3 slots) and the game works without it.
 - `src/engine/` — the engine. `core.ts` holds the game logic (verbs, roles, dialogue, duels) and is shared by the browser presenter (`game.ts`) and the headless test presenter (`headless.ts`). Also the pixel painter, font, walking/pathfinding, puppets and saves.
 - `src/content/` — the game: rooms per act, characters, items, hints (the rubber duck), code review patches.
 - `docs/DESIGN.md` — the puzzle chain, ids and flags.
-
-## Voices (later)
-
-Dialogue is text-only for now. Every line is spoken through `say`/`sayAs` with a speaker id, so a
-later build step can extract `{speaker, text}` pairs, pre-render them with ElevenLabs, and have
-the presenter play the clip whenever the player has collected the Text-to-Speech tool.

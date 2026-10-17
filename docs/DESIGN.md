@@ -4,7 +4,7 @@ This file is the source of truth for room ids, item ids, characters, flags and
 the puzzle chain. Content files must use these ids.
 
 ## Tone
-LucasArts doofy. Universal jokes first (bureaucracy, cookie banners, READMEs,
+Classic point-and-click doofy. Universal jokes first (bureaucracy, cookie banners, READMEs,
 F5, rubber ducks, hit counters, @mentions, popups), Drupal jokes as the second
 layer. Every Drupal thing's "Look at" explains in plain English what it really
 is. No deaths, no dead ends. Text only until the AI module is installed; then the Grand Maintainer demonstrates text-to-speech and text-to-music, and the game has ElevenLabs voices and music (pre-rendered, `npm run audio`).
