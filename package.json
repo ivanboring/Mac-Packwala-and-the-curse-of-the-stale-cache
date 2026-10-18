@@ -90,9 +90,7 @@
       "category": "Game",
       "executableArgs": [
         "--no-sandbox"
-      ],
-      "desktopName": "mac-packwala.desktop",
-      "syncDesktopName": true
+      ]
     },
     "publish": {
       "provider": "github",
