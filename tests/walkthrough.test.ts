@@ -316,6 +316,13 @@ describe('walkthrough', () => {
     expect(core.flag('rescued')).toBe(true);
     expect(core.flag('gameOver')).toBe(true);
 
+    // a finished game still passes save validation
+    const store = new Map<string, string>();
+    (globalThis as any).localStorage = { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) };
+    const { writeSave, loadSave } = await import('../src/engine/save');
+    writeSave('end', core.state);
+    expect(loadSave('end', content)?.inv).toEqual(core.state.inv);
+
     // Every hint step was reachable and resolved
     const { duckHint } = await import('../src/content/hints');
     core.log.length = 0;

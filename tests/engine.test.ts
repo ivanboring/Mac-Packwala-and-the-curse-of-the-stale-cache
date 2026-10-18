@@ -131,3 +131,41 @@ describe('hotspot hit testing', () => {
     }
   });
 });
+
+describe('saves', () => {
+  const store = new Map<string, string>();
+  (globalThis as any).localStorage = {
+    getItem: (k: string) => store.get(k) ?? null,
+    setItem: (k: string, v: string) => void store.set(k, v),
+    removeItem: (k: string) => void store.delete(k),
+  };
+  const put = (v: unknown) => store.set('mac-zakpackin:save:t', typeof v === 'string' ? v : JSON.stringify(v));
+  const good = () => newState(content);
+
+  it('loads a real save', async () => {
+    const { loadSave } = await import('../src/engine/save');
+    put(good());
+    expect(loadSave('t', content)?.room).toBe(content.startRoom);
+    put({ ...good(), inv: ['removed_item', Object.keys(content.items)[0]] });
+    expect(loadSave('t', content)?.inv).toEqual([Object.keys(content.items)[0]]);
+  });
+
+  it('rejects corrupt or foreign saves instead of crashing later', async () => {
+    const { loadSave } = await import('../src/engine/save');
+    const bad: unknown[] = [
+      '{', { v: 1 }, { ...good(), v: 2 }, { ...good(), room: 'nowhere' }, { ...good(), room: 'toString' },
+      { ...good(), role: 'admin' }, { ...good(), mac: { x: 'a', y: 1, dir: 'front' } }, { ...good(), mac: { x: 1, y: 1, dir: 'up' } },
+      { ...good(), inv: [1] }, { ...good(), inv: 'lamp' }, { ...good(), flags: [] }, { ...good(), flags: { a: {} } },
+      { ...good(), playMs: -1 },
+    ];
+    for (const b of bad) { put(b); expect(loadSave('t', content), JSON.stringify(b)).toBeNull(); }
+  });
+
+  it('keeps settings finite and in range', async () => {
+    const { loadSettings } = await import('../src/engine/save');
+    store.set('mac-zakpackin:settings', '{"textSpeed":0,"speechVolume":9,"musicVolume":0.25}');
+    expect(loadSettings()).toEqual({ textSpeed: 1, speechVolume: 1, musicVolume: 0.25 });
+    store.set('mac-zakpackin:settings', 'null');
+    expect(loadSettings()).toEqual({ textSpeed: 1, speechVolume: 1, musicVolume: 0.5 });
+  });
+});

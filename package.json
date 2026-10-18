@@ -37,7 +37,7 @@
     },
     "files": [
       "dist/**/*",
-      "electron/**/*",
+      "electron/main.cjs",
       "package.json"
     ],
     "asar": false,
@@ -76,7 +76,8 @@
         }
       ],
       "category": "public.app-category.adventure-games",
-      "identity": null
+      "identity": "-",
+      "hardenedRuntime": false
     },
     "linux": {
       "target": [
@@ -88,13 +89,12 @@
         }
       ],
       "category": "Game",
-      "executableArgs": [
-        "--no-sandbox"
-      ]
+      "executableArgs": []
     },
     "publish": {
       "provider": "github",
       "releaseType": "release"
-    }
+    },
+    "afterPack": "electron/after-pack.cjs"
   }
 }

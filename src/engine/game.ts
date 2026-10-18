@@ -127,7 +127,7 @@ export class BrowserGame implements Presenter {
   }
 
   async continueGame(slot = 'auto') {
-    const st = loadSave(slot);
+    const st = loadSave(slot, this.content);
     if (!st) return this.newGame();
     this.title = false;
     this.core = new GameCore(this.content, this, false, st);
@@ -823,7 +823,7 @@ export class BrowserGame implements Presenter {
       add('Restart', () => { this.menu = null; this.title = true; this.audio.setMusic(null); });
     } else {
       for (const slot of ['1', '2', '3']) {
-        const st = loadSave(slot);
+        const st = loadSave(slot, this.content);
         const label = st ? `Slot ${slot}: ${this.content.rooms[st.room]?.name ?? st.room} (${ROLE_LABEL[st.role]})` : `Slot ${slot}: empty`;
         add(label, () => {
           if (this.menu === 'save') { this.saved(this.core.state); writeSave(slot, this.core.state); this.menu = null; this.toast = { text: `Saved to slot ${slot}`, until: this.time + 1500 }; }
@@ -860,7 +860,7 @@ export class BrowserGame implements Presenter {
     this.titleBtns = [];
     const addBtn = (label: string, y: number, act: () => void) => this.titleBtns.push({ x: 14, y, w: 120, h: 14, label, act });
     addBtn('New game', 120, () => this.newGame());
-    if (hasSave('auto')) addBtn('Continue', 140, () => this.continueGame('auto'));
+    if (hasSave('auto', this.content)) addBtn('Continue', 140, () => this.continueGame('auto'));
     for (const b of this.titleBtns) {
       const hot = this.inRect(b.x, b.y, b.w, b.h);
       p.rect(b.x + 3, b.y + 3, b.w, b.h, C.brandink);

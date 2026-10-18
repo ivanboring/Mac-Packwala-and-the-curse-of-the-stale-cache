@@ -60,8 +60,16 @@ GitHub builds all three when you push a version tag, and attaches them to a GitH
 git tag v0.2.0 && git push origin v0.2.0
 ```
 
-The tag sets the version. The apps are not code-signed, so Windows SmartScreen and macOS
-Gatekeeper warn on first launch; the release notes explain how to open them anyway.
+The tag sets the version. The apps are not signed with an Apple or Microsoft certificate, so
+Windows SmartScreen and macOS Gatekeeper warn on first launch; the release notes explain how to
+open them. Each release carries `SHA256SUMS.txt` and a GitHub build-provenance attestation
+(`gh attestation verify <file> --repo <owner>/<repo>`) so players can check a download came
+from this workflow. Signing for real needs an Apple Developer ID and a Windows code-signing
+certificate, added as secrets to the build job only.
+
+On Linux the AppImage keeps Chromium's sandbox on. Only on systems that block unprivileged
+user namespaces (Ubuntu 23.10+ without an AppArmor profile) does its launcher
+(`electron/after-pack.cjs`) start it with `--no-sandbox`, since Electron won't start there otherwise.
 `npx tsx tools/make-icon.ts` redraws the app icon (`build/icon.png`).
 
 ## Structure

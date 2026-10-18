@@ -3,6 +3,8 @@
 # Release:   git tag v0.2.0 && git push origin v0.2.0
 #            (the tag sets the version; no need to edit package.json)
 # Try it:    Actions -> Desktop app -> Run workflow (builds downloadable artifacts, no release)
+#
+# Actions are pinned to commit SHAs (the tag is in the comment). Only the release job can write.
 name: Desktop app
 
 on:
@@ -11,14 +13,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -33,8 +37,10 @@ jobs:
         os: [windows-latest, macos-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -46,10 +52,7 @@ jobs:
       - run: npm run build
       - name: Package
         run: npx electron-builder --publish never
-        env:
-          # no Apple Developer certificate: build an unsigned app instead of failing
-          CSC_IDENTITY_AUTO_DISCOVERY: false
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-${{ matrix.os }}
           path: |
@@ -62,12 +65,22 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write      # create the release
+      id-token: write      # sign the provenance attestation
+      attestations: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: release
           merge-multiple: true
-      - uses: softprops/action-gh-release@v2
+      - name: Checksums
+        working-directory: release
+        run: sha256sum * > SHA256SUMS.txt
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: release/*
+      - uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           files: release/*
           body: |
@@ -78,10 +91,16 @@ jobs:
             - macOS: `...-mac-universal.dmg` (Apple Silicon and Intel)
             - Linux: `...-linux-x86_64.AppImage` (make it executable, then run it)
 
+            **Check your download**
+            These builds are not signed with an Apple or Microsoft certificate, so your OS can't vouch for them.
+            Check instead that the file is the one this repository's workflow built:
+            - `gh attestation verify <file> --repo ${{ github.repository }}` (GitHub CLI), or
+            - compare `sha256sum <file>` with `SHA256SUMS.txt` from this release.
+
             **First launch**
             - Windows: SmartScreen may say "Windows protected your PC". Click "More info", then "Run anyway".
-            - macOS: the app is not signed by Apple. Right-click the app, choose Open, then Open again.
-              If macOS says it is damaged, run `xattr -dr com.apple.quarantine "/Applications/Mac Packwala.app"`.
+            - macOS: the first launch is blocked as "from an unidentified developer". Open System Settings,
+              Privacy & Security, and click "Open Anyway" next to Mac Packwala.
             - Linux: `chmod +x Mac-Packwala-*.AppImage`. Some distributions need `libfuse2` for AppImages.
 
             **AI disclosure**: this game was vibe coded with AI. Its music and voices were generated with ElevenLabs.
