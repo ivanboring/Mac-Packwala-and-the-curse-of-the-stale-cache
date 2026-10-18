@@ -1,9 +1,11 @@
 import { BrowserGame } from './engine/game';
 import { content } from './content/index';
 import { fullscreenSupported, setFullscreen } from './engine/fullscreen';
+import { initAnalytics } from './engine/analytics';
 
 const canvas = document.getElementById('screen') as HTMLCanvasElement;
 new BrowserGame(canvas, content);
+initAnalytics();
 
 // "Turn your phone sideways" overlay (shown by CSS on touch screens in portrait).
 const SKIP_KEY = 'mac-zakpackin:rotate-skipped'; // old name kept, like the save prefix

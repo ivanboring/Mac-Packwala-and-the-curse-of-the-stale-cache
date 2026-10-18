@@ -10,6 +10,8 @@ import { SpriteCache } from './sprite';
 import { GameCore, newState, type Content, type Presenter, type Target } from './core';
 import type { CharacterDef, Dir, ItemDef, Role, RoomDef, SaveState, Verb } from './types';
 import { ROLE_EXPLAIN, ROLE_LABEL } from './roles';
+import { track } from './analytics';
+import { showAbout } from './overlays';
 import { loadSave, loadSettings, saveSettings, writeSave, hasSave, type Settings } from './save';
 import { GameAudio, voiceKey } from './audio';
 
@@ -118,6 +120,8 @@ export class BrowserGame implements Presenter {
     this.title = false;
     this.audio.setMusic(null);
     this.core = new GameCore(this.content, this, false, newState(this.content));
+    this.reached = 0;
+    track('game_start');
     this.actors.clear();
     const room = this.content.rooms[this.core.state.room];
     this.core.busy = true;
@@ -131,6 +135,8 @@ export class BrowserGame implements Presenter {
     if (!st) return this.newGame();
     this.title = false;
     this.core = new GameCore(this.content, this, false, st);
+    this.reached = this.milestonesDone(); // already reported when it was played
+    track('game_continue', { room_id: st.room, milestone_number: this.reached });
     this.actors.clear();
     const room = this.content.rooms[st.room];
     await this.enterRoom(room, [st.mac.x, st.mac.y], st.mac.dir);
@@ -272,6 +278,7 @@ export class BrowserGame implements Presenter {
   async enterRoom(room: RoomDef, at: Pt, face: Dir) {
     if (this.roomEntered) await this.fadeTo(1, 220);
     this.roomEntered = true;
+    track('room_enter', { room_id: room.id });
     this.bg = null; this.bgKey = ''; this.walkMap = null; this.walkKey = '';
     const mac = this.actors.get('mac');
     for (const id of [...this.actors.keys()]) if (id !== 'mac') this.actors.delete(id);
@@ -288,6 +295,7 @@ export class BrowserGame implements Presenter {
   }
 
   async roleGranted(role: Role) {
+    track('role_granted', { role });
     await new Promise<void>((resolve) => {
       this.banner = {
         title: `ROLE GRANTED: ${ROLE_LABEL[role].toUpperCase()}`,
@@ -299,6 +307,7 @@ export class BrowserGame implements Presenter {
   }
 
   itemGained(item: ItemDef) {
+    track('item_gained', { item_id: item.id });
     const name = typeof item.name === 'function' ? item.name(this.core) : item.name;
     this.toast = { text: `${item.tool ? 'Tool card added to the Tool API Belt' : 'Picked up'}: ${name}`, until: this.time + 2200 };
     this.invFlash = this.time + 900;
@@ -338,7 +347,10 @@ export class BrowserGame implements Presenter {
 
   shake() { this.shakeUntil = this.time + 450; }
   now() { return this.time; }
-  async toTitle() { this.title = true; this.audio.setMusic(null); }
+  async toTitle() {
+    if (this.core.flag('rescued')) track('game_complete', { play_minutes: Math.round(this.core.state.playMs / 60000) });
+    this.title = true; this.audio.setMusic(null);
+  }
   refresh() { this.dirty = true; }
 
   actorPos(id: string) {
@@ -476,6 +488,7 @@ export class BrowserGame implements Presenter {
 
   private update(dt: number) {
     if (this.dirty) this.syncRoom();
+    if (this.time >= this.nextMilestoneCheck) this.checkMilestones();
     const room = this.core.room;
     for (const a of this.actors.values()) {
       if (!a.path.length) continue;
@@ -790,7 +803,7 @@ export class BrowserGame implements Presenter {
   private renderMenu() {
     const p = this.p;
     p.rect(0, 0, W, H, [C.brandink, 0]);
-    const bw = 200, bh = 150, x = (W - bw) / 2, y = (H - bh) / 2;
+    const bw = 200, bh = this.menu === 'main' ? 165 : 150, x = (W - bw) / 2, y = (H - bh) / 2;
     p.rect(x + 4, y + 4, bw, bh, C.brandblue);
     p.rect(x, y, bw, bh, C.brandpaper);
     p.frame(x, y, bw, bh, C.brandink);
@@ -820,6 +833,7 @@ export class BrowserGame implements Presenter {
       };
       vol('speechVolume', 'Speech volume');
       vol('musicVolume', 'Music volume');
+      add('About', () => { this.menu = null; showAbout(); });
       add('Restart', () => { this.menu = null; this.title = true; this.audio.setMusic(null); });
     } else {
       for (const slot of ['1', '2', '3']) {
@@ -1003,6 +1017,7 @@ export class BrowserGame implements Presenter {
       }
     });
     addEventListener('keydown', (e) => {
+      if (document.body.classList.contains('overlay-open')) return; // About, privacy policy...
       this.audio.unlock();
       if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) this.toggleFullscreen();
       else if (e.key === 'Escape') { if (!this.title) this.menu = this.menu ? null : 'main'; }
@@ -1016,6 +1031,25 @@ export class BrowserGame implements Presenter {
     });
   }
   debugOverlay = false;
+
+  // ---- analytics: how far players get ------------------------------------------------
+  private reached = 0;
+  private nextMilestoneCheck = 0;
+  /** How many steps of the puzzle chain are done, counting from the start. */
+  private milestonesDone() {
+    const list = this.content.milestones ?? [];
+    const i = list.findIndex((m) => !m.done(this.core));
+    return i < 0 ? list.length : i;
+  }
+  /** Once a second: one `milestone` event per newly reached step, in order. */
+  private checkMilestones() {
+    this.nextMilestoneCheck = this.time + 1000;
+    const list = this.content.milestones ?? [];
+    const now = this.milestonesDone();
+    for (; this.reached < now; this.reached++) {
+      track('milestone', { milestone: list[this.reached].id, milestone_number: this.reached + 1, milestone_total: list.length });
+    }
+  }
 
   private toggleFullscreen() {
     if (!fullscreenSupported()) {

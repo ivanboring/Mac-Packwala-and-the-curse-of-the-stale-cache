@@ -2,42 +2,46 @@
 // and the first unsolved step in this list becomes the hint.
 import type { Game } from '../engine/types';
 
-/** `step` names the help #ai-contrib gives for it (see HELP below). */
-type Hint = { done: (g: Game) => boolean; lines: string[]; step?: string };
+/** `id` names the milestone for analytics (how far players get); `step` names the help #ai-contrib
+ *  gives for it (see HELP below). */
+type Hint = { id: string; done: (g: Game) => boolean; lines: string[]; step?: string };
 
 const f = (name: string) => (g: Game) => !!g.flag(name);
 const got = (item: string) => (g: Game) => !!g.flag(`got:${item}`);
 
 const HINTS: Hint[] = [
-  { done: f('cronAwake'), lines: ['So, duck: the README says Cron lives on the cliff. But he only wakes up when someone "visits"...', '...and I have a box of keyboard parts I can\'t open. Maybe something in the wreck could pry it?'] },
-  { done: f('cookiesDone'), lines: ['That cookie guard blocks the way to town. There must be a "Reject all" somewhere. There always is. It\'s just hidden.', 'Or I could accept everything and... refresh him if he gets stuck?'] },
-  { done: (g) => g.atLeast('authenticated'), lines: ['Everyone keeps saying I need to register. The registration desk is at the harbour.', 'If the clerk sends me an email... where IS my inbox on this island? Something keeps washing up on the beach.'] },
-  { done: f('trialsGiven'), lines: ["I'm logged in now. The Grand Maintainer in the square might finally talk to me."] },
-  { done: got('tokens'), lines: ['I need tokens. The Token Request Form can never pass validation - it requires a field it doesn\'t have.', 'Someone who alters forms could fix that. A pirate in the tavern alters things... but his alterations keep getting overridden. Something heavier, to run later?'] },
-  { done: f('aiInstalled'), lines: ['To install the AI module, the Composer needs sheet music - composer.json - and a cat-free piano.', 'Cats like fish. Even red ones. Even ones that are supposedly useless.'] },
-  { done: (g) => g.atLeast('editor'), lines: ['The AI module is installed! I should tell the Grand Maintainer.'] },
-  { done: f('providerReady'), lines: ['Trial one: configure a provider. The idols in the temple want an API key, and tokens go in the slot.', 'But a key must be stored safely. The Key Keeper only trusts people who never commit secrets... like someone with a .gitignore.'] },
-  { done: f('automatorDone'), lines: ['Trial two: the mill. The Automator needs a provider and a good prompt.', "A prompt that's been tested first - Professor Abrahams's AI Explorer is for exactly that. He'd trade it for something nobody reads."] },
-  { done: (g) => !g.flag('providerSuspended'), lines: ['The idols cut off my provider over the token bill. I need to count my tokens - and a cheaper plan B.', "The Key Keeper counts everything. And Ollama the llama keeps saying he's local and free..."] },
-  { done: f('masterBeaten'), lines: ['Trial three: beat the Code Review Master. Her patches hide the same bugs the reviewers at the crossroads show me.', "Every bug I miss, they explain. Every bug they explain, I'll spot next time. The Master lives behind the Waterfall. Nobody uses the Waterfall anymore."] },
-  { done: (g) => g.atLeast('sitebuilder'), lines: ['All three trials are done. Back to the Grand Maintainer!'] },
-  { done: f('windowFixed'), lines: ['The lighthouse lamp is an MCP Client - but the stairs are broken and the lamp\'s context window is shattered.', 'The sign painter in town might lend a ladder if I fix his spelling. And the temple has a lovely stained-glass window.'] },
-  { done: f('slackConnected'), lines: ['The Slack server out on the reef is a parrot that only answers when @mentioned.', 'And parrots want crackers. OAuth ones, ideally.'] },
-  { step: 'contextReady', done: f('contextReady'), lines: ['My agent wrote pure mush to "Captain Noodle". It knows nothing about me, or this island.', 'Agents need context. Modelia keeps Kristen\'s Context Control Center down in the lighthouse.'] },
-  { done: (g) => !!g.flag('searchReady') || !!g.flag('geoClue'), lines: ['The GeoCities ghost knows where we are, but I need a translator. The Librarian has one, but her search only finds exact words.', 'He needs an index sorted by similarity. Like the scales on a pinecone, from the jungle crossroads. And a provider.'] },
-  { done: (g) => !!g.flag('flowBuilt') || !!g.flag('geoClue'), lines: ["The Librarian's FlowDrop board: trigger, shelf, summary, review, index.", 'But the LLM writes an essay every time it picks a shelf. I need a model that just CHOOSES. Professor Abrahams might know one.'] },
-  { done: f('geoClue'), lines: ['AI Translate could make sense of the GeoCities ghost in the graveyard.'] },
-  { step: 'mcpServing', done: f('mcpServing'), lines: ['Captain Node wants the coordinates via a tool call. I need an MCP server, and a geolocation tool on it.', 'The ghost said Old Cron logs everything, and he watches the stars on schedule. A blank Tool API card could become a tool.'] },
-  { step: 'spamFixed', done: (g) => !!g.flag('spamFixed') || !!g.flag('permGranted'), lines: ['Formsworth is buried in spam. His AI Validations need a model that answers TRUE or FALSE.', 'Not an essay. I know just the model.'] },
-  { step: 'permGranted', done: f('permGranted'), lines: ["Captain Node is Anonymous on my server, like I once was. She needs a permission. On a page with 3,000 checkboxes.", 'If only I had a tool that could search...'] },
-  { step: 'hookInjected', done: f('hookInjected'), lines: ["Permission granted. I should message Captain Node from the lighthouse lamp again."] },
-  { step: 'guardrailsOn', done: f('guardrailsOn'), lines: ['Captain Hook hijacked my agent with "ignore previous instructions". I need guardrails: checks before and after every AI request.', 'The lamp room balcony has a railing. Literally a guard rail.'] },
-  { step: 'needBeacon', done: f('needBeacon'), lines: ['Guardrails are up. Time to call Captain Node again.'] },
-  { step: 'securityReviewed', done: f('securityReviewed'), lines: ['Captain Node promised a chart of the reef approach. I should check Slack at the lamp.', 'And if something looks too easy - like flipping one switch to "Full HTML" - maybe count to three first.'] },
-  { step: 'ecaBeacon', done: f('ecaBeacon'), lines: ["Captain Node can't find the dock in the fog, and I can't be at the lamp and the dock at the same time.", "Old Cron's ECA card: WHEN something happens, IF it's true, THEN do something. A fog horn that talks would need my text-to-speech tool."] },
-  { done: f('disclosed'), lines: ['Customs wants to know if my postcard is AI-generated. Formsworth gave me an AI Disclosure stamp.', 'Honesty is probably the policy. It usually is at customs.'] },
-  { done: f('rescued'), lines: ['I made it to the Paradise of Rosetta! Captain Node is waiting past the rope.'] },
+  { id: 'cron_awake', done: f('cronAwake'), lines: ['So, duck: the README says Cron lives on the cliff. But he only wakes up when someone "visits"...', '...and I have a box of keyboard parts I can\'t open. Maybe something in the wreck could pry it?'] },
+  { id: 'cookies_done', done: f('cookiesDone'), lines: ['That cookie guard blocks the way to town. There must be a "Reject all" somewhere. There always is. It\'s just hidden.', 'Or I could accept everything and... refresh him if he gets stuck?'] },
+  { id: 'registered', done: (g) => g.atLeast('authenticated'), lines: ['Everyone keeps saying I need to register. The registration desk is at the harbour.', 'If the clerk sends me an email... where IS my inbox on this island? Something keeps washing up on the beach.'] },
+  { id: 'trials_given', done: f('trialsGiven'), lines: ["I'm logged in now. The Grand Maintainer in the square might finally talk to me."] },
+  { id: 'tokens', done: got('tokens'), lines: ['I need tokens. The Token Request Form can never pass validation - it requires a field it doesn\'t have.', 'Someone who alters forms could fix that. A pirate in the tavern alters things... but his alterations keep getting overridden. Something heavier, to run later?'] },
+  { id: 'ai_installed', done: f('aiInstalled'), lines: ['To install the AI module, the Composer needs sheet music - composer.json - and a cat-free piano.', 'Cats like fish. Even red ones. Even ones that are supposedly useless.'] },
+  { id: 'editor', done: (g) => g.atLeast('editor'), lines: ['The AI module is installed! I should tell the Grand Maintainer.'] },
+  { id: 'provider_ready', done: f('providerReady'), lines: ['Trial one: configure a provider. The idols in the temple want an API key, and tokens go in the slot.', 'But a key must be stored safely. The Key Keeper only trusts people who never commit secrets... like someone with a .gitignore.'] },
+  { id: 'automator_done', done: f('automatorDone'), lines: ['Trial two: the mill. The Automator needs a provider and a good prompt.', "A prompt that's been tested first - Professor Abrahams's AI Explorer is for exactly that. He'd trade it for something nobody reads."] },
+  { id: 'provider_restored', done: (g) => !g.flag('providerSuspended'), lines: ['The idols cut off my provider over the token bill. I need to count my tokens - and a cheaper plan B.', "The Key Keeper counts everything. And Ollama the llama keeps saying he's local and free..."] },
+  { id: 'master_beaten', done: f('masterBeaten'), lines: ['Trial three: beat the Code Review Master. Her patches hide the same bugs the reviewers at the crossroads show me.', "Every bug I miss, they explain. Every bug they explain, I'll spot next time. The Master lives behind the Waterfall. Nobody uses the Waterfall anymore."] },
+  { id: 'site_builder', done: (g) => g.atLeast('sitebuilder'), lines: ['All three trials are done. Back to the Grand Maintainer!'] },
+  { id: 'window_fixed', done: f('windowFixed'), lines: ['The lighthouse lamp is an MCP Client - but the stairs are broken and the lamp\'s context window is shattered.', 'The sign painter in town might lend a ladder if I fix his spelling. And the temple has a lovely stained-glass window.'] },
+  { id: 'slack_connected', done: f('slackConnected'), lines: ['The Slack server out on the reef is a parrot that only answers when @mentioned.', 'And parrots want crackers. OAuth ones, ideally.'] },
+  { id: 'context_ready', step: 'contextReady', done: f('contextReady'), lines: ['My agent wrote pure mush to "Captain Noodle". It knows nothing about me, or this island.', 'Agents need context. Modelia keeps Kristen\'s Context Control Center down in the lighthouse.'] },
+  { id: 'search_ready', done: (g) => !!g.flag('searchReady') || !!g.flag('geoClue'), lines: ['The GeoCities ghost knows where we are, but I need a translator. The Librarian has one, but her search only finds exact words.', 'He needs an index sorted by similarity. Like the scales on a pinecone, from the jungle crossroads. And a provider.'] },
+  { id: 'flow_built', done: (g) => !!g.flag('flowBuilt') || !!g.flag('geoClue'), lines: ["The Librarian's FlowDrop board: trigger, shelf, summary, review, index.", 'But the LLM writes an essay every time it picks a shelf. I need a model that just CHOOSES. Professor Abrahams might know one.'] },
+  { id: 'geo_clue', done: f('geoClue'), lines: ['AI Translate could make sense of the GeoCities ghost in the graveyard.'] },
+  { id: 'mcp_serving', step: 'mcpServing', done: f('mcpServing'), lines: ['Captain Node wants the coordinates via a tool call. I need an MCP server, and a geolocation tool on it.', 'The ghost said Old Cron logs everything, and he watches the stars on schedule. A blank Tool API card could become a tool.'] },
+  { id: 'spam_fixed', step: 'spamFixed', done: (g) => !!g.flag('spamFixed') || !!g.flag('permGranted'), lines: ['Formsworth is buried in spam. His AI Validations need a model that answers TRUE or FALSE.', 'Not an essay. I know just the model.'] },
+  { id: 'perm_granted', step: 'permGranted', done: f('permGranted'), lines: ["Captain Node is Anonymous on my server, like I once was. She needs a permission. On a page with 3,000 checkboxes.", 'If only I had a tool that could search...'] },
+  { id: 'hook_injected', step: 'hookInjected', done: f('hookInjected'), lines: ["Permission granted. I should message Captain Node from the lighthouse lamp again."] },
+  { id: 'guardrails_on', step: 'guardrailsOn', done: f('guardrailsOn'), lines: ['Captain Hook hijacked my agent with "ignore previous instructions". I need guardrails: checks before and after every AI request.', 'The lamp room balcony has a railing. Literally a guard rail.'] },
+  { id: 'need_beacon', step: 'needBeacon', done: f('needBeacon'), lines: ['Guardrails are up. Time to call Captain Node again.'] },
+  { id: 'security_reviewed', step: 'securityReviewed', done: f('securityReviewed'), lines: ['Captain Node promised a chart of the reef approach. I should check Slack at the lamp.', 'And if something looks too easy - like flipping one switch to "Full HTML" - maybe count to three first.'] },
+  { id: 'eca_beacon', step: 'ecaBeacon', done: f('ecaBeacon'), lines: ["Captain Node can't find the dock in the fog, and I can't be at the lamp and the dock at the same time.", "Old Cron's ECA card: WHEN something happens, IF it's true, THEN do something. A fog horn that talks would need my text-to-speech tool."] },
+  { id: 'disclosed', done: f('disclosed'), lines: ['Customs wants to know if my postcard is AI-generated. Formsworth gave me an AI Disclosure stamp.', 'Honesty is probably the policy. It usually is at customs.'] },
+  { id: 'rescued', done: f('rescued'), lines: ['I made it to the Paradise of Rosetta! Captain Node is waiting past the rope.'] },
 ];
+
+/** The puzzle chain in order, for analytics: a player has reached every leading step that is done. */
+export const MILESTONES = HINTS.map(({ id, done }) => ({ id, done }));
 
 export async function duckHint(g: Game) {
   const h = HINTS.find((x) => !x.done(g));

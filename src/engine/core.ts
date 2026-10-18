@@ -58,6 +58,8 @@ export interface Content {
   music?: Record<string, string>;
   /** Called after a duel ends. */
   afterDuel?: (g: Game, duel: DuelDef, won: boolean) => void | Promise<void>;
+  /** The puzzle chain in order, for analytics (how far players get). */
+  milestones?: { id: string; done: (g: Game) => boolean }[];
 }
 
 export type Target = { kind: 'hotspot'; id: string } | { kind: 'item'; id: string };

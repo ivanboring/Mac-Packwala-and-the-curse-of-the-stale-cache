@@ -2,7 +2,7 @@
 // It is served from app://game/ rather than file://, because the game fetch()es its audio
 // manifest (file:// can't be fetched), music streams with byte ranges, and the saves in
 // localStorage need an origin that stays the same from one launch to the next.
-const { app, BrowserWindow, Menu, protocol, session } = require('electron');
+const { app, BrowserWindow, Menu, protocol, session, shell } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { Readable } = require('node:stream');
@@ -74,6 +74,18 @@ function serve(request) {
   });
 }
 
+// The only places the game links to.
+const LINKS = ['https://github.com/ivanboring/Mac-Packwala-and-the-curse-of-the-stale-cache', 'https://workflows-of-ai.com'];
+function isExternalLink(url) {
+  let u;
+  try { u = new URL(url); } catch { return false; }
+  return u.protocol === 'https:' && LINKS.some((l) => {
+    const base = new URL(l);
+    const path = base.pathname.replace(/\/$/, '');
+    return u.origin === base.origin && (u.pathname === path || u.pathname.startsWith(`${path}/`) || (!path && u.pathname === '/'));
+  });
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1280,
@@ -86,8 +98,11 @@ function createWindow() {
     autoHideMenuBar: true,
     webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false, webviewTag: false },
   });
-  // the game never opens windows or leaves its own page
-  win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  // the game never leaves its own page; About's links (downloads, source code) open in the browser
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    if (isExternalLink(url)) shell.openExternal(url);
+    return { action: 'deny' };
+  });
   win.webContents.on('will-navigate', (e) => e.preventDefault());
   win.webContents.on('will-redirect', (e) => e.preventDefault());
   win.loadURL(`${ORIGIN}/index.html`);

@@ -316,6 +316,9 @@ describe('walkthrough', () => {
     expect(core.flag('rescued')).toBe(true);
     expect(core.flag('gameOver')).toBe(true);
 
+    // every milestone (analytics: how far players get) is reached by the end
+    expect(content.milestones!.every((m) => m.done(core))).toBe(true);
+
     // a finished game still passes save validation
     const store = new Map<string, string>();
     (globalThis as any).localStorage = { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) };

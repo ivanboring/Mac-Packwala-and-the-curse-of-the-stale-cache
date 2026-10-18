@@ -5,6 +5,7 @@ import * as act1 from './act1';
 import * as act2 from './act2';
 import * as act3 from './act3';
 import { MUSIC } from './music';
+import { MILESTONES } from './hints';
 
 const byId = <T extends { id: string }>(list: T[]) => {
   const out: Record<string, T> = {};
@@ -27,4 +28,5 @@ export const content: Content = {
   fallback,
   afterDuel: act2.afterDuel,
   music: MUSIC,
+  milestones: MILESTONES,
 };

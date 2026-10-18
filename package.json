@@ -37,11 +37,12 @@
     },
     "files": [
       "dist/**/*",
+      "!dist/env.json",
       "electron/main.cjs",
       "package.json"
     ],
     "asar": false,
-    "artifactName": "Mac-Packwala-${version}-${os}-${arch}.${ext}",
+    "artifactName": "Mac-Packwala-${os}-${arch}.${ext}",
     "win": {
       "target": [
         {
@@ -61,10 +62,10 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "artifactName": "Mac-Packwala-${version}-windows-setup.${ext}"
+      "artifactName": "Mac-Packwala-windows-setup.${ext}"
     },
     "portable": {
-      "artifactName": "Mac-Packwala-${version}-windows-portable.${ext}"
+      "artifactName": "Mac-Packwala-windows-portable.${ext}"
     },
     "mac": {
       "target": [

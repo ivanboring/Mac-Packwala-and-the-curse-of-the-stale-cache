@@ -169,3 +169,12 @@ describe('saves', () => {
     expect(loadSettings()).toEqual({ textSpeed: 1, speechVolume: 1, musicVolume: 0.5 });
   });
 });
+
+describe('milestones', () => {
+  it('have unique, analytics-friendly ids', () => {
+    const ids = (content.milestones ?? []).map((m) => m.id);
+    expect(ids.length).toBeGreaterThan(20);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const id of ids) expect(id).toMatch(/^[a-z][a-z_]{1,39}$/);
+  });
+});

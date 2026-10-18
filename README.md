@@ -44,6 +44,44 @@ For example, upload it to `/island/` on the site. To embed it in a Drupal page:
 
 Saves use `localStorage` (autosave plus 3 slots) and the game works without it.
 
+### Analytics (optional, web only)
+
+Off by default. To count plays with Google Analytics, copy `env.example.json` to `public/env.json`
+(git ignores it) and fill in your GA4 measurement id, then build. Or drop an `env.json` next to
+`index.html` on the server; the game reads it at startup, so no rebuild is needed.
+
+```json
+{
+  "googleAnalyticsId": "G-XXXXXXXXXX",
+  "operator": "Workflows of AI",
+  "contact": "privacy@example.com",
+  "dataRetentionMonths": 2
+}
+```
+
+`operator` and `contact` go into the in-game privacy policy (contact can be an email address or a
+URL; it defaults to the repo's issues page). Set `dataRetentionMonths` to match the retention you
+choose in the GA admin (2 or 14).
+
+- With no `env.json`, or an empty id, the game starts straight away and loads nothing from Google.
+- With an id, the web version opens on a start page: a big "Accept the privacy policy and play"
+  button (the policy is readable in the game), download buttons for the desktop app for players
+  who don't want to be tracked, and a link to set it up with npm from this repo. Google's script
+  only loads after the accept. Players can read the policy again and withdraw consent from
+  menu, About, Privacy policy, which deletes the `_ga` cookies and returns to the start page.
+- The desktop app never uses analytics: it doesn't read `env.json` (and doesn't package it).
+- Events: `game_start`, `game_continue`, `room_enter`, `item_gained`, `role_granted`, `game_complete`,
+  and `milestone` for how far players get. The milestones are the puzzle chain the rubber duck
+  hints follow (`src/content/hints.ts`, 28 steps from `cron_awake` to `rescued`); each event has
+  `milestone` (the id), `milestone_number` and `milestone_total`. To chart them, register
+  `milestone` and `milestone_number` as custom dimensions in the GA admin, then build a funnel
+  exploration on the `milestone` event, or a bar chart of users by `milestone_number`.
+- Ad features are off (Google Signals, ad personalisation, ad storage), and the `_ga` cookies last
+  13 months. In the GA admin, also accept the data-processing terms.
+
+The menu's About page (web and desktop) has the version, the AI disclosure, the download links,
+privacy, and the source code.
+
 ## Desktop app (Windows, macOS, Linux)
 
 The same game in an Electron window (`electron/main.cjs`), packaged with electron-builder.
@@ -59,6 +97,13 @@ GitHub builds all three when you push a version tag, and attaches them to a GitH
 ```bash
 git tag v0.2.0 && git push origin v0.2.0
 ```
+
+File names carry no version, so these links always point at the newest release:
+
+- Windows: https://github.com/ivanboring/Mac-Packwala-and-the-curse-of-the-stale-cache/releases/latest/download/Mac-Packwala-windows-setup.exe
+- Windows, no install: https://github.com/ivanboring/Mac-Packwala-and-the-curse-of-the-stale-cache/releases/latest/download/Mac-Packwala-windows-portable.exe
+- macOS: https://github.com/ivanboring/Mac-Packwala-and-the-curse-of-the-stale-cache/releases/latest/download/Mac-Packwala-mac-universal.dmg
+- Linux: https://github.com/ivanboring/Mac-Packwala-and-the-curse-of-the-stale-cache/releases/latest/download/Mac-Packwala-linux-x86_64.AppImage
 
 The tag sets the version. The apps are not signed with an Apple or Microsoft certificate, so
 Windows SmartScreen and macOS Gatekeeper warn on first launch; the release notes explain how to
