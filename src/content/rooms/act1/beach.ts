@@ -209,6 +209,7 @@ export const beach: RoomDef = {
     if (!g.flag('introDone')) {
       g.set('introDone');
       g.mac.visible = false;
+      await g.card(['AI disclosure', '', 'This game was vibe coded with AI.', 'Its music and voices were generated with ElevenLabs.'], 5000);
       await g.card(['Mac Packwala', 'and the Curse of the Stale Cache', '', 'A Workflows of AI adventure'], 4200);
       await g.narrate([
         'Mac Packwala, Drupal site builder, was sailing to a conference aboard the SS Waterfall.',

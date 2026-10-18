@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "description": "A classic point-and-click adventure about escaping a desert island with Drupal AI.",
+  "author": "Workflows of AI",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
@@ -12,12 +15,88 @@
     "trailer": "tsx tools/trailer/render.ts",
     "audio": "tsx tools/audio/generate.ts",
     "audio:lines": "tsx tools/audio/lines.ts",
-    "audio:record": "rm -f tools/audio/spoken.jsonl && vitest run --config tools/audio/vitest.record.config.ts"
+    "audio:record": "rm -f tools/audio/spoken.jsonl && vitest run --config tools/audio/vitest.record.config.ts",
+    "app": "npm run build && electron .",
+    "app:dist": "npm run build && electron-builder --publish never"
   },
   "devDependencies": {
+    "electron": "44.4.5",
+    "electron-builder": "26.17.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.4",
     "vitest": "^5.0.5"
+  },
+  "build": {
+    "appId": "com.workflows-of-ai.mac-packwala",
+    "productName": "Mac Packwala",
+    "copyright": "Workflows of AI",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "asar": false,
+    "artifactName": "Mac-Packwala-${version}-${os}-${arch}.${ext}",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Mac-Packwala-${version}-windows-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "Mac-Packwala-${version}-windows-portable.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "category": "public.app-category.adventure-games",
+      "identity": null
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Game",
+      "executableArgs": [
+        "--no-sandbox"
+      ],
+      "desktopName": "mac-packwala.desktop",
+      "syncDesktopName": true
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    }
   }
 }

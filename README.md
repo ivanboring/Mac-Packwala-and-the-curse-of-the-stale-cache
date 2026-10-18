@@ -7,6 +7,8 @@ a Slack MCP server, and finally an MCP server with a geolocation tool so Captain
 
 No external assets: all art, the font and the UI are drawn in code onto a 320×200 canvas.
 
+**AI disclosure:** this game was vibe coded with AI. Its music and voices were generated with [ElevenLabs](https://elevenlabs.io/).
+
 ## Develop
 
 ```bash
@@ -41,6 +43,26 @@ For example, upload it to `/island/` on the site. To embed it in a Drupal page:
 ```
 
 Saves use `localStorage` (autosave plus 3 slots) and the game works without it.
+
+## Desktop app (Windows, macOS, Linux)
+
+The same game in an Electron window (`electron/main.cjs`), packaged with electron-builder.
+
+```bash
+npm run app          # build and run it locally
+npm run app:dist     # installers for this OS in release/
+```
+
+GitHub builds all three when you push a version tag, and attaches them to a GitHub Release
+(`.github/workflows/desktop.yml`):
+
+```bash
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+The tag sets the version. The apps are not code-signed, so Windows SmartScreen and macOS
+Gatekeeper warn on first launch; the release notes explain how to open them anyway.
+`npx tsx tools/make-icon.ts` redraws the app icon (`build/icon.png`).
 
 ## Structure
 

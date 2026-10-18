@@ -2,3 +2,11 @@ node_modules/
 dist/
 trailer/
 music/
+release/
+coverage/
+*.log
+*.tsbuildinfo
+.env
+.env.*
+.DS_Store
+Thumbs.db

@@ -869,6 +869,9 @@ export class BrowserGame implements Presenter {
       const fg = hot || b.label === 'New game' ? C.white : C.brandink;
       drawText(p, b.label, Math.round(b.x + b.w / 2 - textWidth(b.label) / 2), b.y + 3, fg);
     }
+    // AI disclosure (the game teaches it at Rosetta customs; it practises it here)
+    drawText(p, 'AI disclosure: vibe coded with AI.', 14, 162, C.brandslate);
+    drawText(p, 'Music and voices: ElevenLabs.', 14, 172, C.brandslate);
     drawText(p, 'workflows-of-ai.com', 14, 188, C.brandslate);
   }
 
